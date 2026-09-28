@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: api-thu-vien
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: KHOA_BI_MAT
+        generateValue: true          # Render tu sinh mot chuoi ngau nhien
+      - key: CHUOI_KET_NOI
+        fromDatabase:
+          name: thu-vien-db
+          property: connectionString
+      - key: SO_PHUT_HET_HAN
+        value: 30
+      - key: TAO_DU_LIEU_MAU
+        value: true
+
+databases:
+  - name: thu-vien-db
+    plan: free
